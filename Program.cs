@@ -16,26 +16,35 @@ namespace DatabaseApp
     }
 
     public class MainForm : Form
+    {  // Переменные для работы с базой данных и элементами управления на форме
+        private SQLiteConnection connection; // Подключение к базе данных SQLite
+        private SQLiteCommand command; // Команда базы данных
+
+        private TextBox dateTextBox; // Поле для ввода даты
+        private TextBox cityTextBox; // Поле для ввода города
+        private TextBox amountTextBox; // Поле для ввода суммы
+        private Button addButton; // Кнопка для добавления записи
+        private Button readButton; // Кнопка для чтения данных из базы
+        private Button clearButton; // Кнопка для очистки записей в базе и на форме
+        private DataGridView dataGridView; // Таблица для отображения данных
+        private Panel panel; // Объявление переменной panel в классе
+        
+    public MainForm()
     {
-        private SQLiteConnection connection;
-        private SQLiteCommand command;
+        InitializeComponent();
+        InitializeDatabase();
+        this.AutoSize = true; // Установка автоматического размера формы
 
-        private TextBox dateTextBox;
-        private TextBox cityTextBox;
-        private TextBox amountTextBox;
-        private Button addButton;
-        private Button readButton;
-        private Button clearButton;
-        private DataGridView dataGridView;
+     }
 
-        public MainForm()
-        {
-            InitializeComponent();
-            InitializeDatabase();
-        }
-
-     private void InitializeComponent()
+    private void InitializeComponent()
 {
+    // Создание панели для размещения элементов
+    panel = new Panel();
+    panel.Location = new System.Drawing.Point(0, 0);
+    panel.Size = new System.Drawing.Size(800, 500); // Задайте размер, который подходит для вашего приложения
+    panel.AutoScroll = true; // Включите автоматическую прокрутку
+
     // Создание текстовых полей для ввода даты, города и суммы
     dateTextBox = new TextBox();
     cityTextBox = new TextBox();
@@ -93,14 +102,17 @@ namespace DatabaseApp
     dataGridView.Columns[1].Name = "City";
     dataGridView.Columns[2].Name = "Amount";
 
-    // Добавление элементов на форму
-    Controls.Add(dateTextBox);
-    Controls.Add(cityTextBox);
-    Controls.Add(amountTextBox);
-    Controls.Add(addButton);
-    Controls.Add(readButton);
-    Controls.Add(clearButton);
-    Controls.Add(dataGridView);
+    // Добавление элементов на панель
+    panel.Controls.Add(dateTextBox);
+    panel.Controls.Add(cityTextBox);
+    panel.Controls.Add(amountTextBox);
+    panel.Controls.Add(addButton);
+    panel.Controls.Add(readButton);
+    panel.Controls.Add(clearButton);
+    panel.Controls.Add(dataGridView);
+
+    // Добавление панели на форму
+    Controls.Add(panel);
 
     // Создание и добавление меток для указания предназначения каждого текстового поля
     var dateLabel = new Label();
@@ -119,6 +131,7 @@ namespace DatabaseApp
     Controls.Add(cityLabel);
     Controls.Add(amountLabel);
 }
+
 
     private void InitializeDatabase()
         {
