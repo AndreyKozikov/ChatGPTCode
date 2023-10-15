@@ -34,11 +34,19 @@ namespace DatabaseApp
             InitializeComponent();
             InitializeDatabase();
             this.AutoSize = true; // Установка автоматического размера формы
+            dataGridView.EditingControlShowing += dataGridView_EditingControlShowing;
 
         }
 
         private void InitializeComponent()
         {
+            // Создание DateTimePicker для выбора даты
+            var datePicker = new DateTimePicker();
+            datePicker.Format = DateTimePickerFormat.Short;
+            datePicker.Location = new System.Drawing.Point(50, 50);
+            datePicker.Name = "datePicker";
+            datePicker.Size = new System.Drawing.Size(100, 20);
+
             // Создание панели для размещения элементов
             panel = new Panel();
             panel.Location = new System.Drawing.Point(0, 0);
@@ -145,6 +153,7 @@ namespace DatabaseApp
             panel.Controls.Add(clearButton);
             panel.Controls.Add(dataGridView);
             panel.Controls.Add(saveToDatabaseButton);
+            panel.Controls.Add(datePicker);
 
             // Добавление панели на форму
             Controls.Add(panel);
@@ -153,6 +162,31 @@ namespace DatabaseApp
             connection = new SQLiteConnection("Data Source=database.db;Version=3;");
             connection.Open();
             command = connection.CreateCommand();
+        }
+        // Метод обработки события EditingControlShowing
+        private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            DataGridView dataGridView = sender as DataGridView;
+
+            // Проверка, является ли текущий столбец столбцом с индексом 0 (если столбец с датой находится в первом столбце)
+            if (dataGridView.CurrentCell.OwningColumn.Name == "Date")
+            {
+                // Преобразование контрола редактирования в DateTimePicker
+                TextBox textBox = e.Control as TextBox;
+                DateTimePicker dtp = new DateTimePicker();
+                dtp.Format = DateTimePickerFormat.Short;
+                dtp.Visible = true;
+                dtp.Width = textBox.Width;
+                dtp.ValueChanged += (s, ev) => textBox.Text = dtp.Text;
+
+                // Обработчик события CellEndEdit для скрытия DateTimePicker
+                dataGridView.CellEndEdit += (s, ev) =>
+                {
+                    dataGridView.Controls.Remove(dtp);
+                };
+
+                dataGridView.Controls.Add(dtp);
+            }
         }
 
 
