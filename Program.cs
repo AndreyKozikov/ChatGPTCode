@@ -67,6 +67,14 @@ namespace DatabaseApp
             addButton = new Button();
             readButton = new Button();
             clearButton = new Button();
+            // Создание кнопки для сохранения данных в базе данных
+            var saveToDatabaseButton = new Button();
+            saveToDatabaseButton.Location = new System.Drawing.Point(500, 400);
+            saveToDatabaseButton.Name = "saveToDatabaseButton";
+            saveToDatabaseButton.Size = new System.Drawing.Size(150, 30);
+            saveToDatabaseButton.Text = "Сохранить в базу данных";
+            saveToDatabaseButton.UseVisualStyleBackColor = true;
+            saveToDatabaseButton.Click += SaveToDatabaseButton_Click;
 
             // Создание таблицы для отображения данных
             dataGridView = new DataGridView();
@@ -136,12 +144,60 @@ namespace DatabaseApp
             panel.Controls.Add(readButton);
             panel.Controls.Add(clearButton);
             panel.Controls.Add(dataGridView);
+            panel.Controls.Add(saveToDatabaseButton);
 
             // Добавление панели на форму
             Controls.Add(panel);
+
+            // Инициализация connection и command
+            connection = new SQLiteConnection("Data Source=database.db;Version=3;");
+            connection.Open();
+            command = connection.CreateCommand();
         }
 
 
+        private void SaveToDatabaseButton_Click(object sender, EventArgs e)
+        {
+            bool hasNullValue = false;
+
+            foreach (DataGridViewRow row in dataGridView.Rows)
+            {
+                if (row.Index == dataGridView.Rows.Count - 1) continue; // Пропустить последнюю строку
+
+                if (row.Cells[0].Value != null && row.Cells[1].Value != null && row.Cells[2].Value != null)
+                {
+                    string date = row.Cells[0].Value.ToString();
+                    string city = row.Cells[1].Value.ToString();
+                    string amount = row.Cells[2].Value.ToString();
+
+                    string insertQuery = "INSERT INTO Transactions (Date, City, Amount) VALUES (@date, @city, @amount)";
+                    command = new SQLiteCommand(insertQuery, connection);
+                    command.Parameters.AddWithValue("@date", date);
+                    command.Parameters.AddWithValue("@city", city);
+                    command.Parameters.AddWithValue("@amount", amount);
+
+                    if (command.ExecuteNonQuery() <= 0)
+                    {
+                        hasNullValue = true;
+                        break;
+                    }
+                }
+                else
+                {
+                    hasNullValue = true;
+                    break;
+                }
+            }
+
+            if (!hasNullValue)
+            {
+                MessageBox.Show("Данные успешно добавлены в базу данных.");
+            }
+            else
+            {
+                MessageBox.Show("Одно или несколько значений в таблице пустые. Невозможно добавить в базу данных.");
+            }
+        }
 
 
         private void InitializeDatabase()
