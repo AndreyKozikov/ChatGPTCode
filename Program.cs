@@ -24,6 +24,8 @@ namespace DatabaseApp
         private TextBox cityTextBox;
         private TextBox amountTextBox;
         private Button addButton;
+        private Button readButton;
+        private Button clearButton;
         private DataGridView dataGridView;
 
         public MainForm()
@@ -38,8 +40,11 @@ namespace DatabaseApp
             cityTextBox = new TextBox();
             amountTextBox = new TextBox();
             addButton = new Button();
+            readButton = new Button();
+            clearButton = new Button();
             dataGridView = new DataGridView();
 
+            // Setting locations and sizes of controls
             dateTextBox.Location = new System.Drawing.Point(50, 50);
             dateTextBox.Name = "dateTextBox";
             dateTextBox.Size = new System.Drawing.Size(100, 20);
@@ -59,16 +64,34 @@ namespace DatabaseApp
             addButton.UseVisualStyleBackColor = true;
             addButton.Click += AddButton_Click;
 
+            readButton.Location = new System.Drawing.Point(600, 50);
+            readButton.Name = "readButton";
+            readButton.Size = new System.Drawing.Size(75, 23);
+            readButton.Text = "Read";
+            readButton.UseVisualStyleBackColor = true;
+            readButton.Click += ReadButton_Click;
+
+            clearButton.Location = new System.Drawing.Point(700, 50);
+            clearButton.Name = "clearButton";
+            clearButton.Size = new System.Drawing.Size(75, 23);
+            clearButton.Text = "Clear";
+            clearButton.UseVisualStyleBackColor = true;
+            clearButton.Click += ClearButton_Click;
+
             dataGridView.Location = new System.Drawing.Point(50, 100);
-            dataGridView.Size = new System.Drawing.Size(525, 200);
-            dataGridView.Columns.Add("Date", "Дата");
-            dataGridView.Columns.Add("City", "Город");
-            dataGridView.Columns.Add("Amount", "Сумма");
+            dataGridView.Name = "dataGridView";
+            dataGridView.Size = new System.Drawing.Size(500, 300);
+            dataGridView.ColumnCount = 3;
+            dataGridView.Columns[0].Name = "Date";
+            dataGridView.Columns[1].Name = "City";
+            dataGridView.Columns[2].Name = "Amount";
 
             Controls.Add(dateTextBox);
             Controls.Add(cityTextBox);
             Controls.Add(amountTextBox);
             Controls.Add(addButton);
+            Controls.Add(readButton);
+            Controls.Add(clearButton);
             Controls.Add(dataGridView);
 
             var dateLabel = new Label();
@@ -114,8 +137,8 @@ namespace DatabaseApp
 
                 if (command.ExecuteNonQuery() > 0)
                 {
-                    MessageBox.Show("Данные успешно добавлены в базу данных.");
                     dataGridView.Rows.Add(new string[] { date, city, amount.ToString() });
+                    MessageBox.Show("Данные успешно добавлены в базу данных.");
                     dateTextBox.Clear();
                     cityTextBox.Clear();
                     amountTextBox.Clear();
@@ -129,6 +152,39 @@ namespace DatabaseApp
             {
                 MessageBox.Show("Пожалуйста, введите корректное значение для Суммы.");
             }
+        }
+
+        private void ReadButton_Click(object sender, EventArgs e)
+        {
+            string query = "SELECT * FROM Transactions";
+            SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(query, connection);
+            var dataSet = new System.Data.DataSet();
+            dataAdapter.Fill(dataSet, "Transactions");
+
+            dataGridView.Rows.Clear();
+            foreach (System.Data.DataRow row in dataSet.Tables["Transactions"].Rows)
+            {
+                string date = row["Date"].ToString();
+                string city = row["City"].ToString();
+                string amount = row["Amount"].ToString();
+                dataGridView.Rows.Add(new string[] { date, city, amount });
+            }
+        }
+
+        private void ClearButton_Click(object sender, EventArgs e)
+        {
+           string clearQuery = "DELETE FROM Transactions";
+    command = new SQLiteCommand(clearQuery, connection);
+
+    if (command.ExecuteNonQuery() > 0)
+    {
+        dataGridView.Rows.Clear();
+        MessageBox.Show("Все записи успешно удалены из базы данных.");
+    }
+    else
+    {
+        MessageBox.Show("Произошла ошибка при очистке базы данных.");
+    }
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
