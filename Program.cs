@@ -28,112 +28,123 @@ namespace DatabaseApp
         private Button clearButton; // Кнопка для очистки записей в базе и на форме
         private DataGridView dataGridView; // Таблица для отображения данных
         private Panel panel; // Объявление переменной panel в классе
-        
-    public MainForm()
-    {
-        InitializeComponent();
-        InitializeDatabase();
-        this.AutoSize = true; // Установка автоматического размера формы
 
-     }
+        public MainForm()
+        {
+            InitializeComponent();
+            InitializeDatabase();
+            this.AutoSize = true; // Установка автоматического размера формы
 
-    private void InitializeComponent()
-{
-    // Создание панели для размещения элементов
-    panel = new Panel();
-    panel.Location = new System.Drawing.Point(0, 0);
-    panel.Size = new System.Drawing.Size(800, 500); // Задайте размер, который подходит для вашего приложения
-    panel.AutoScroll = true; // Включите автоматическую прокрутку
+        }
 
-    // Создание текстовых полей для ввода даты, города и суммы
-    dateTextBox = new TextBox();
-    cityTextBox = new TextBox();
-    amountTextBox = new TextBox();
+        private void InitializeComponent()
+        {
+            // Создание панели для размещения элементов
+            panel = new Panel();
+            panel.Location = new System.Drawing.Point(0, 0);
+            panel.Size = new System.Drawing.Size(800, 500); // Задайте размер, который подходит для вашего приложения
+            panel.AutoScroll = true; // Включите автоматическую прокрутку
 
-    // Создание кнопок для выполнения операций добавления, чтения и очистки данных
-    addButton = new Button();
-    readButton = new Button();
-    clearButton = new Button();
+            // Создание текстовых меток
+            var dateLabel = new Label();
+            dateLabel.Text = "Введите дату:";
+            dateLabel.Location = new System.Drawing.Point(50, 30);
 
-    // Создание таблицы для отображения данных
-    dataGridView = new DataGridView();
+            var cityLabel = new Label();
+            cityLabel.Text = "Введите город:";
+            cityLabel.Location = new System.Drawing.Point(200, 30);
 
-    // Установка положения и размеров элементов управления на форме
-    dateTextBox.Location = new System.Drawing.Point(50, 50);
-    dateTextBox.Name = "dateTextBox";
-    dateTextBox.Size = new System.Drawing.Size(100, 20);
+            var amountLabel = new Label();
+            amountLabel.Text = "Введите сумму:";
+            amountLabel.Location = new System.Drawing.Point(350, 30);
 
-    cityTextBox.Location = new System.Drawing.Point(200, 50);
-    cityTextBox.Name = "cityTextBox";
-    cityTextBox.Size = new System.Drawing.Size(100, 20);
+            // Создание текстовых полей для ввода даты, города и суммы
+            dateTextBox = new TextBox();
+            cityTextBox = new TextBox();
+            amountTextBox = new TextBox();
 
-    amountTextBox.Location = new System.Drawing.Point(350, 50);
-    amountTextBox.Name = "amountTextBox";
-    amountTextBox.Size = new System.Drawing.Size(100, 20);
+            // Создание кнопок для выполнения операций добавления, чтения и очистки данных
+            addButton = new Button();
+            readButton = new Button();
+            clearButton = new Button();
 
-    // Установка положения и размеров кнопок
-    addButton.Location = new System.Drawing.Point(500, 50);
-    addButton.Name = "addButton";
-    addButton.Size = new System.Drawing.Size(75, 23);
-    addButton.Text = "Add";
-    addButton.UseVisualStyleBackColor = true;
-    addButton.Click += AddButton_Click;
+            // Создание таблицы для отображения данных
+            dataGridView = new DataGridView();
 
-    readButton.Location = new System.Drawing.Point(600, 50);
-    readButton.Name = "readButton";
-    readButton.Size = new System.Drawing.Size(75, 23);
-    readButton.Text = "Read";
-    readButton.UseVisualStyleBackColor = true;
-    readButton.Click += ReadButton_Click;
+            // Установка положения и размеров элементов управления на панели
+            dateLabel.Location = new System.Drawing.Point(50, 30);
+            dateLabel.Name = "dateLabel";
+            dateLabel.Size = new System.Drawing.Size(150, 20);
 
-    clearButton.Location = new System.Drawing.Point(700, 50);
-    clearButton.Name = "clearButton";
-    clearButton.Size = new System.Drawing.Size(75, 23);
-    clearButton.Text = "Clear";
-    clearButton.UseVisualStyleBackColor = true;
-    clearButton.Click += ClearButton_Click;
+            cityLabel.Location = new System.Drawing.Point(200, 30);
+            cityLabel.Name = "cityLabel";
+            cityLabel.Size = new System.Drawing.Size(150, 20);
 
-    // Установка положения и размеров таблицы
-    dataGridView.Location = new System.Drawing.Point(50, 100);
-    dataGridView.Name = "dataGridView";
-    dataGridView.Size = new System.Drawing.Size(500, 300);
-    dataGridView.ColumnCount = 3;
-    dataGridView.Columns[0].Name = "Date";
-    dataGridView.Columns[1].Name = "City";
-    dataGridView.Columns[2].Name = "Amount";
+            amountLabel.Location = new System.Drawing.Point(350, 30);
+            amountLabel.Name = "amountLabel";
+            amountLabel.Size = new System.Drawing.Size(150, 20);
 
-    // Добавление элементов на панель
-    panel.Controls.Add(dateTextBox);
-    panel.Controls.Add(cityTextBox);
-    panel.Controls.Add(amountTextBox);
-    panel.Controls.Add(addButton);
-    panel.Controls.Add(readButton);
-    panel.Controls.Add(clearButton);
-    panel.Controls.Add(dataGridView);
+            dateTextBox.Location = new System.Drawing.Point(50, 50);
+            dateTextBox.Name = "dateTextBox";
+            dateTextBox.Size = new System.Drawing.Size(100, 20);
 
-    // Добавление панели на форму
-    Controls.Add(panel);
+            cityTextBox.Location = new System.Drawing.Point(200, 50);
+            cityTextBox.Name = "cityTextBox";
+            cityTextBox.Size = new System.Drawing.Size(100, 20);
 
-    // Создание и добавление меток для указания предназначения каждого текстового поля
-    var dateLabel = new Label();
-    dateLabel.Text = "Дата:";
-    dateLabel.Location = new System.Drawing.Point(50, 30);
+            amountTextBox.Location = new System.Drawing.Point(350, 50);
+            amountTextBox.Name = "amountTextBox";
+            amountTextBox.Size = new System.Drawing.Size(100, 20);
 
-    var cityLabel = new Label();
-    cityLabel.Text = "Город:";
-    cityLabel.Location = new System.Drawing.Point(200, 30);
+            addButton.Location = new System.Drawing.Point(500, 50);
+            addButton.Name = "addButton";
+            addButton.Size = new System.Drawing.Size(75, 23);
+            addButton.Text = "Add";
+            addButton.UseVisualStyleBackColor = true;
+            addButton.Click += AddButton_Click;
 
-    var amountLabel = new Label();
-    amountLabel.Text = "Сумма:";
-    amountLabel.Location = new System.Drawing.Point(350, 30);
+            readButton.Location = new System.Drawing.Point(600, 50);
+            readButton.Name = "readButton";
+            readButton.Size = new System.Drawing.Size(75, 23);
+            readButton.Text = "Read";
+            readButton.UseVisualStyleBackColor = true;
+            readButton.Click += ReadButton_Click;
 
-    Controls.Add(dateLabel);
-    Controls.Add(cityLabel);
-    Controls.Add(amountLabel);
-}
+            clearButton.Location = new System.Drawing.Point(700, 50);
+            clearButton.Name = "clearButton";
+            clearButton.Size = new System.Drawing.Size(75, 23);
+            clearButton.Text = "Clear";
+            clearButton.UseVisualStyleBackColor = true;
+            clearButton.Click += ClearButton_Click;
+
+            dataGridView.Location = new System.Drawing.Point(50, 100);
+            dataGridView.Name = "dataGridView";
+            dataGridView.Size = new System.Drawing.Size(500, 300);
+            dataGridView.ColumnCount = 3;
+            dataGridView.Columns[0].Name = "Date";
+            dataGridView.Columns[1].Name = "City";
+            dataGridView.Columns[2].Name = "Amount";
+
+            // Добавление элементов на панель
+            panel.Controls.Add(dateLabel);
+            panel.Controls.Add(cityLabel);
+            panel.Controls.Add(amountLabel);
+            panel.Controls.Add(dateTextBox);
+            panel.Controls.Add(cityTextBox);
+            panel.Controls.Add(amountTextBox);
+            panel.Controls.Add(addButton);
+            panel.Controls.Add(readButton);
+            panel.Controls.Add(clearButton);
+            panel.Controls.Add(dataGridView);
+
+            // Добавление панели на форму
+            Controls.Add(panel);
+        }
 
 
-    private void InitializeDatabase()
+
+
+        private void InitializeDatabase()
         {
             connection = new SQLiteConnection("Data Source=database.db;Version=3;");
             connection.Open();
@@ -143,7 +154,7 @@ namespace DatabaseApp
             command.ExecuteNonQuery();
         }
 
-    private void AddButton_Click(object sender, EventArgs e)
+        private void AddButton_Click(object sender, EventArgs e)
         {
             string date = dateTextBox.Text;
             string city = cityTextBox.Text;
@@ -176,7 +187,7 @@ namespace DatabaseApp
             }
         }
 
-    private void ReadButton_Click(object sender, EventArgs e)
+        private void ReadButton_Click(object sender, EventArgs e)
         {
             string query = "SELECT * FROM Transactions";
             SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(query, connection);
@@ -193,20 +204,20 @@ namespace DatabaseApp
             }
         }
 
-    private void ClearButton_Click(object sender, EventArgs e)
+        private void ClearButton_Click(object sender, EventArgs e)
         {
-           string clearQuery = "DELETE FROM Transactions";
-        command = new SQLiteCommand(clearQuery, connection);
+            string clearQuery = "DELETE FROM Transactions";
+            command = new SQLiteCommand(clearQuery, connection);
 
-        if (command.ExecuteNonQuery() > 0)
-        {
-        dataGridView.Rows.Clear();
-        MessageBox.Show("Все записи успешно удалены из базы данных.");
-        }
-        else
-        {
-        MessageBox.Show("Произошла ошибка при очистке базы данных.");
-     }
+            if (command.ExecuteNonQuery() > 0)
+            {
+                dataGridView.Rows.Clear();
+                MessageBox.Show("Все записи успешно удалены из базы данных.");
+            }
+            else
+            {
+                MessageBox.Show("Произошла ошибка при очистке базы данных.");
+            }
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
